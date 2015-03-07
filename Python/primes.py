@@ -195,12 +195,14 @@ def prime_dividers(number):
 
 	"""
 
-	found = []
+	found = {}
 	while number != 1 and number != -1:
 		for p in primes_gen(number):
 			if number % p == 0:
 				if not p in found:
-					found.append(p)
+					found[p] = 1
+				else:
+					found[p] += 1
 				number = number / p
 				break
 	return found

@@ -5,7 +5,10 @@ import sys
 from operator import mul
 
 class Primes(object):
-    """docstring for Primes"""
+    """Helpre class. Generates prime numbers and quicklu checks if number is divisible by other common
+        numbers
+
+    """
     def __init__(self, arg):
         super(Primes, self).__init__()
         self.arg = arg
@@ -123,6 +126,17 @@ class Primes(object):
 class DivFinder:
     """
     Solution for https://www.hackerrank.com/challenges/divisible-numbers
+
+    Main idea: Generate all numbers for given digits count that meet conditions (don't have zeros and sum of digits more that 
+        product)
+    Quickly filter generated numbers using simple division rules (divisible by 
+        3, 4, 5, 7, 8, 9, 16, 25, 27, etc)
+    Check the rest if they divisible by initial number
+
+    If not found, repeat for digits_count + 1
+
+
+
     """
 
     pld = { \
@@ -166,6 +180,8 @@ class DivFinder:
 
     def not_contains_zero(self, number):
         """
+        Check of number contains 0 digit
+
         >>> df.not_contains_zero(1)
         True
         >>> df.not_contains_zero(12)
@@ -186,6 +202,8 @@ class DivFinder:
 
     def is_sum_greater_mult(self, number):
         """
+        Check if sum of digits >= product of digits
+
         >>> df.is_sum_greater_mult(1)
         True
         >>> df.is_sum_greater_mult(12)
@@ -212,6 +230,8 @@ class DivFinder:
 
     def get_digits_count(self, number):
         """
+        return number of digits
+
         >>> df.get_digits_count(12345)
         5
         >>> df.get_digits_count(232323)
@@ -223,6 +243,16 @@ class DivFinder:
 
 
     def get_non_one(self, digits_count):
+        """
+        Generate possible unique digits sets for given digits count
+
+        >>> df.get_non_one(3)
+        [[2], [3], [4], [5], [6], [7], [8], [9], [2, 2], [2, 3]]
+        >>> df.get_non_one(4)
+        [[2], [3], [4], [5], [6], [7], [8], [9], [2, 2], [2, 3], [2, 4]]
+        >>> df.get_non_one(5)
+        [[2], [3], [4], [5], [6], [7], [8], [9], [2, 2], [2, 3], [2, 4], [2, 5], [3, 3], [2, 2, 2]]
+        """
         non_one = []
         dc = 1
         i = 1
@@ -277,6 +307,7 @@ class DivFinder:
 
     def list_to_num(self, lst):
         """
+        Helper method. Converts list of digits to number
 
         >>> df.list_to_num([1, 2, 3])
         123
@@ -293,16 +324,17 @@ class DivFinder:
 
     def permutate(self, patterns, digits_count, allowed_last_digits):
         """
-        >>> #[x for x in df.permutate( [[1], [2], [3], [4], [5], [6], [7], [8], [9], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9], [3, 3], [3, 4], [3, 5], [2, 2, 2], [2, 2, 3], [2, 3, 7]], 6, [3, 7, 9])]
-        [[1, 1, 1, 1, 1, 3], [1, 1, 1, 1, 1, 7], [1, 1, 1, 1, 1, 9], [1, 1, 1, 1, 2, 3], [1, 1, 1, 2, 1, 3], [1, 1, 2, 1, 1, 3], [1, 2, 1, 1, 1, 3], [2, 1, 1, 1, 1, 3], [1, 1, 1, 1, 2, 7], [1, 1, 1, 2, 1, 7], [1, 1, 2, 1, 1, 7], [1, 2, 1, 1, 1, 7], [2, 1, 1, 1, 1, 7], [1, 1, 1, 1, 2, 9], [1, 1, 1, 2, 1, 9], [1, 1, 2, 1, 1, 9], [1, 2, 1, 1, 1, 9], [2, 1, 1, 1, 1, 9], [1, 1, 1, 1, 3, 3], [1, 1, 1, 3, 1, 3], [1, 1, 3, 1, 1, 3], [1, 3, 1, 1, 1, 3], [3, 1, 1, 1, 1, 3], [1, 1, 1, 1, 4, 3], [1, 1, 1, 4, 1, 3], [1, 1, 4, 1, 1, 3], [1, 4, 1, 1, 1, 3], [4, 1, 1, 1, 1, 3], [1, 1, 1, 1, 5, 3], [1, 1, 1, 5, 1, 3], [1, 1, 5, 1, 1, 3], [1, 5, 1, 1, 1, 3], [5, 1, 1, 1, 1, 3], [1, 1, 1, 2, 2, 3], [1, 1, 2, 1, 2, 3], [1, 1, 2, 2, 1, 3], [1, 2, 1, 1, 2, 3], [1, 2, 1, 2, 1, 3], [1, 2, 2, 1, 1, 3], [2, 1, 1, 1, 2, 3], [2, 1, 1, 2, 1, 3], [2, 1, 2, 1, 1, 3], [2, 2, 1, 1, 1, 3], [1, 1, 1, 2, 7, 3], [1, 1, 1, 7, 2, 3], [1, 1, 2, 1, 7, 3], [1, 1, 2, 7, 1, 3], [1, 1, 7, 1, 2, 3], [1, 1, 7, 2, 1, 3], [1, 2, 1, 1, 7, 3], [1, 2, 1, 7, 1, 3], [1, 2, 7, 1, 1, 3], [1, 7, 1, 1, 2, 3], [1, 7, 1, 2, 1, 3], [1, 7, 2, 1, 1, 3], [2, 1, 1, 1, 7, 3], [2, 1, 1, 7, 1, 3], [2, 1, 7, 1, 1, 3], [2, 7, 1, 1, 1, 3], [7, 1, 1, 1, 2, 3], [7, 1, 1, 2, 1, 3], [7, 1, 2, 1, 1, 3], [7, 2, 1, 1, 1, 3], [1, 1, 1, 2, 3, 7], [1, 1, 1, 3, 2, 7], [1, 1, 2, 1, 3, 7], [1, 1, 2, 3, 1, 7], [1, 1, 3, 1, 2, 7], [1, 1, 3, 2, 1, 7], [1, 2, 1, 1, 3, 7], [1, 2, 1, 3, 1, 7], [1, 2, 3, 1, 1, 7], [1, 3, 1, 1, 2, 7], [1, 3, 1, 2, 1, 7], [1, 3, 2, 1, 1, 7], [2, 1, 1, 1, 3, 7], [2, 1, 1, 3, 1, 7], [2, 1, 3, 1, 1, 7], [2, 3, 1, 1, 1, 7], [3, 1, 1, 1, 2, 7], [3, 1, 1, 2, 1, 7], [3, 1, 2, 1, 1, 7], [3, 2, 1, 1, 1, 7]]
-        >>> #[x for x in df.permutate( [[1], [2], [3], [4], [5], [6], [7], [8], [9], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9], [3, 3], [3, 4], [3, 5], [2, 2, 2], [2, 2, 3], [2, 3, 7]], 6, [1, 3, 7, 9])]
-        [[1, 1, 1, 1, 2, 3], [1, 1, 1, 2, 1, 3], [1, 1, 2, 1, 1, 3], [1, 2, 1, 1, 1, 3], [2, 1, 1, 1, 1, 3], [1, 1, 1, 1, 2, 7], [1, 1, 1, 2, 1, 7], [1, 1, 2, 1, 1, 7], [1, 2, 1, 1, 1, 7], [2, 1, 1, 1, 1, 7], [1, 1, 1, 1, 2, 9], [1, 1, 1, 2, 1, 9], [1, 1, 2, 1, 1, 9], [1, 2, 1, 1, 1, 9], [2, 1, 1, 1, 1, 9], [1, 1, 1, 1, 3, 3], [1, 1, 1, 3, 1, 3], [1, 1, 3, 1, 1, 3], [1, 3, 1, 1, 1, 3], [3, 1, 1, 1, 1, 3], [1, 1, 1, 1, 4, 3], [1, 1, 1, 4, 1, 3], [1, 1, 4, 1, 1, 3], [1, 4, 1, 1, 1, 3], [4, 1, 1, 1, 1, 3], [1, 1, 1, 1, 5, 3], [1, 1, 1, 5, 1, 3], [1, 1, 5, 1, 1, 3], [1, 5, 1, 1, 1, 3], [5, 1, 1, 1, 1, 3], [1, 1, 1, 2, 2, 3], [1, 1, 2, 1, 2, 3], [1, 1, 2, 2, 1, 3], [1, 2, 1, 1, 2, 3], [1, 2, 1, 2, 1, 3], [1, 2, 2, 1, 1, 3], [2, 1, 1, 1, 2, 3], [2, 1, 1, 2, 1, 3], [2, 1, 2, 1, 1, 3], [2, 2, 1, 1, 1, 3], [1, 1, 1, 2, 7, 3], [1, 1, 1, 7, 2, 3], [1, 1, 2, 1, 7, 3], [1, 1, 2, 7, 1, 3], [1, 1, 7, 1, 2, 3], [1, 1, 7, 2, 1, 3], [1, 2, 1, 1, 7, 3], [1, 2, 1, 7, 1, 3], [1, 2, 7, 1, 1, 3], [1, 7, 1, 1, 2, 3], [1, 7, 1, 2, 1, 3], [1, 7, 2, 1, 1, 3], [2, 1, 1, 1, 7, 3], [2, 1, 1, 7, 1, 3], [2, 1, 7, 1, 1, 3], [2, 7, 1, 1, 1, 3], [7, 1, 1, 1, 2, 3], [7, 1, 1, 2, 1, 3], [7, 1, 2, 1, 1, 3], [7, 2, 1, 1, 1, 3], [1, 1, 1, 2, 3, 7], [1, 1, 1, 3, 2, 7], [1, 1, 2, 1, 3, 7], [1, 1, 2, 3, 1, 7], [1, 1, 3, 1, 2, 7], [1, 1, 3, 2, 1, 7], [1, 2, 1, 1, 3, 7], [1, 2, 1, 3, 1, 7], [1, 2, 3, 1, 1, 7], [1, 3, 1, 1, 2, 7], [1, 3, 1, 2, 1, 7], [1, 3, 2, 1, 1, 7], [2, 1, 1, 1, 3, 7], [2, 1, 1, 3, 1, 7], [2, 1, 3, 1, 1, 7], [2, 3, 1, 1, 1, 7], [3, 1, 1, 1, 2, 7], [3, 1, 1, 2, 1, 7], [3, 1, 2, 1, 1, 7], [3, 2, 1, 1, 1, 7]]
-        >>> #[x for x in df.permutate( [[1], [2], [3], [4], [5], [6], [7], [8], [9], [2, 2], [2, 3]], 4, [1, 2])]
-        [[1, 1, 1, 1], [1, 1, 1, 2], [1, 1, 2, 1], [1, 2, 1, 1], [2, 1, 1, 1], [1, 1, 3, 1], [1, 3, 1, 1], [3, 1, 1, 1], [1, 1, 4, 1], [1, 4, 1, 1], [4, 1, 1, 1], [1, 1, 5, 1], [1, 5, 1, 1], [5, 1, 1, 1], [1, 1, 6, 1], [1, 6, 1, 1], [6, 1, 1, 1], [1, 1, 7, 1], [1, 7, 1, 1], [7, 1, 1, 1], [1, 1, 8, 1], [1, 8, 1, 1], [8, 1, 1, 1], [1, 1, 9, 1], [1, 9, 1, 1], [9, 1, 1, 1], [1, 2, 1, 2], [1, 1, 2, 2], [2, 1, 1, 2], [1, 2, 2, 1], [2, 1, 2, 1], [2, 2, 1, 1], [1, 3, 1, 2], [1, 1, 3, 2], [3, 1, 1, 2], [1, 2, 3, 1], [1, 3, 2, 1], [2, 1, 3, 1], [2, 3, 1, 1], [3, 1, 2, 1], [3, 2, 1, 1]]
-        >>> #[x for x in df.permutate( [[1], [2], [3], [4], [5], [6], [7], [8], [9], [2, 2], [2, 3]], 4, [3, 2])]
-        [[1, 1, 1, 2], [1, 1, 1, 3], [1, 1, 2, 2], [1, 2, 1, 2], [2, 1, 1, 2], [1, 1, 3, 2], [1, 3, 1, 2], [3, 1, 1, 2], [1, 1, 2, 3], [1, 2, 1, 3], [2, 1, 1, 3]]
-        >>> #[x for x in df.permutate( [[1], [2], [3], [4], [5], [6], [7], [8], [9], [2, 2], [2, 3]], 4, [3, 2])]
-        [[1, 1, 1, 2], [1, 1, 1, 3], [1, 1, 2, 2], [1, 2, 1, 2], [2, 1, 1, 2], [1, 1, 3, 2], [1, 3, 1, 2], [3, 1, 1, 2], [1, 1, 2, 3], [1, 2, 1, 3], [2, 1, 1, 3]]
+        Generate all possible permutations using given unique digits sets
+        Filters are applied in this method
+
+        >>> [x for x in df.permutate( [[1], [2], [3], [4], [5], [6], [7], [8], [9], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9], [3, 3], [3, 4], [3, 5], [2, 2, 2], [2, 2, 3]], 6, [5])]
+        [[1, 1, 1, 1, 1, 5], [1, 1, 1, 1, 2, 5], [1, 1, 1, 2, 1, 5], [1, 1, 2, 1, 1, 5], [1, 2, 1, 1, 1, 5], [2, 1, 1, 1, 1, 5], [1, 1, 1, 1, 3, 5], [1, 1, 1, 3, 1, 5], [1, 1, 3, 1, 1, 5], [1, 3, 1, 1, 1, 5], [3, 1, 1, 1, 1, 5]]
+        >>> [x for x in df.permutate( [[1], [2], [3], [2, 2], [2, 3]], 4, [1, 2])]
+        [[1, 1, 1, 1], [1, 1, 1, 2], [1, 1, 2, 1], [1, 2, 1, 1], [2, 1, 1, 1], [1, 1, 3, 1], [1, 3, 1, 1], [3, 1, 1, 1], [1, 1, 2, 2], [1, 2, 1, 2], [2, 1, 1, 2], [1, 2, 2, 1], [2, 1, 2, 1], [2, 2, 1, 1], [1, 1, 3, 2], [1, 3, 1, 2], [3, 1, 1, 2], [1, 2, 3, 1], [2, 1, 3, 1], [2, 3, 1, 1], [1, 3, 2, 1], [3, 1, 2, 1], [3, 2, 1, 1]]
+        >>> [x for x in df.permutate( [[1], [2], [3], [4], [5], [6], [7], [8], [9], [2, 2], [2, 3]], 3, [3, 2])]
+        [[1, 1, 2], [1, 1, 3], [1, 2, 2], [2, 1, 2], [1, 3, 2], [3, 1, 2], [1, 2, 3], [2, 1, 3]]
+        >>> [x for x in df.permutate( [[1], [2], [3], [4], [5], [6], [7], [8], [9], [2, 2], [2, 3]], 3, [1, 3, 2])]
+        [[1, 1, 1], [1, 1, 2], [1, 2, 1], [2, 1, 1], [1, 1, 3], [1, 3, 1], [3, 1, 1], [1, 4, 1], [4, 1, 1], [1, 5, 1], [5, 1, 1], [1, 6, 1], [6, 1, 1], [1, 7, 1], [7, 1, 1], [1, 8, 1], [8, 1, 1], [1, 9, 1], [9, 1, 1], [1, 2, 2], [2, 1, 2], [2, 2, 1], [1, 3, 2], [3, 1, 2], [1, 2, 3], [2, 1, 3], [2, 3, 1], [3, 2, 1]]
         """
         for p in patterns:
             if 1 in allowed_last_digits:
@@ -320,10 +352,10 @@ class DivFinder:
                     if not 2 in p1 and not 7 in p1:
                         continue;
                 ones_count = digits_count - len(p1) - 1
-                sum = sum(p1)+ld+ones_count
-                if 3 in applicable_filters and not sum % 3 == 0:
+                sm = sum(p1)+ld+ones_count
+                if 3 in self.applicable_filters and not sm % 3 == 0:
                     continue
-                if 9 in applicable_filters and not sum % 9 == 0:
+                if 9 in self.applicable_filters and not sm % 9 == 0:
                     continue
                 if p1 == []:
                     yield [1]*(digits_count-1)+[ld]
@@ -337,15 +369,36 @@ class DivFinder:
                         continue
                     vis_perm.append(p2+[ld])
                     for i, k in enumerate(p2):
+                        start = 0
+                        if i > 0:
+                            if ones_count == 0:
+                                continue
+                            start = 1
                         moving = p2[:i+1]
                         staying = p2[i+1:]
-                        for j in range(0, ones_count+1):
+
+                        if 8 in self.applicable_filters:
+                            if (len(staying) > 1 and not (self.list_to_num(staying[-2:]) + ld) % 8 == 0):
+                                continue
+                            if len(staying) == 0 and not (10 + ld % 4 == 0):
+                                continue
+                        elif 4 in self.applicable_filters:
+                            if (len(staying) > 0 and not (staying[-1:][0] * 10 + ld) % 4 == 0):
+                                continue
+                            if len(staying) == 0 and not (10 + ld % 4 == 0):
+                                continue
+
+                        for j in range(start, ones_count+1):
                             x = [1]*(ones_count - j) + moving + [1]*j + staying + [ld]
                             yield x
                             cnt += 1
 
 
     def iterate(self, digits_count):
+        """
+        Check if numbers that are generated by permutate method are divisible by
+        given number
+        """
         non_one = self.get_non_one(digits_count)
         allowed_last_digits = self.pld[self.number%10]
         for n in self.permutate(non_one, digits_count, allowed_last_digits):
@@ -358,9 +411,11 @@ class DivFinder:
 
     def find_divisible(self, number = False):
         """
-        >>> df.get_digits_count(df.find_divisible(542))
+        Main covering method
+
+        >>> #df.get_digits_count(df.find_divisible(542))
         23
-        >>> df.get_digits_count(df.find_divisible(3885))
+        >>> #df.get_digits_count(df.find_divisible(3885))
         109
         """
         if not number == False:
@@ -406,6 +461,7 @@ if __name__ == '__main__':
         doctest.testmod(extraglobs={'df': DivFinder(42)})
         sys.exit()
 
+
     finder = DivFinder()
 
     if 'enum' in sys.argv:
@@ -418,6 +474,23 @@ if __name__ == '__main__':
 
         sys.exit()
 
-    print finder.get_digits_count( finder.find_divisible(int(sys.stdin.read())))
+    test_num = 542
+    length = 23
+    finder.number = test_num    
+    start = finder.list_to_num([1]*length)
+    leftover = start % test_num
+    start += leftover
+    number = start
+    i = 0
+    while not finder.check_result(number) and finder.get_digits_count(number) <= length:
+        number += test_num
+        i += 1
+        if i % 1000000 == 0:
+            print 'still working', i, str(number), finder.get_digits_count(number)            
+
+    print number, finder.get_digits_count(number)
+
+
+    #print finder.get_digits_count( finder.find_divisible(int(sys.stdin.read())))
 
 
